@@ -1,0 +1,987 @@
+{
+  "$schema": "https://raw.githubusercontent.com/martinring/tmlanguage/master/tmlanguage.json",
+  "name": "Aster",
+  "scopeName": "source.aster",
+  "patterns": [
+    {
+      "include": "#comments"
+    },
+    {
+      "include": "#fstrings"
+    },
+    {
+      "include": "#strings"
+    },
+    {
+      "include": "#numbers"
+    },
+    {
+      "include": "#imports"
+    },
+    {
+      "include": "#type-declarations"
+    },
+    {
+      "include": "#function-declarations"
+    },
+    {
+      "include": "#accessor-declarations"
+    },
+    {
+      "include": "#property-declarations"
+    },
+    {
+      "include": "#variable-language"
+    },
+    {
+      "include": "#constants"
+    },
+    {
+      "include": "#keywords"
+    },
+    {
+      "include": "#new-expression"
+    },
+    {
+      "include": "#member-access"
+    },
+    {
+      "include": "#types"
+    },
+    {
+      "include": "#function-calls"
+    },
+    {
+      "include": "#operators"
+    },
+    {
+      "include": "#punctuation"
+    }
+  ],
+  "repository": {
+    "comments": {
+      "patterns": [
+        {
+          "name": "comment.line.number-sign.aster",
+          "match": "#.*$"
+        },
+        {
+          "name": "comment.block.aster",
+          "begin": "/\\*",
+          "end": "\\*/"
+        }
+      ]
+    },
+    "fstrings": {
+      "patterns": [
+        {
+          "name": "string.quoted.f.aster",
+          "begin": "\\bf(\")",
+          "beginCaptures": {
+            "0": {
+              "name": "storage.type.string.prefix.aster"
+            },
+            "1": {
+              "name": "punctuation.definition.string.begin.aster"
+            }
+          },
+          "end": "\"|$",
+          "endCaptures": {
+            "0": {
+              "name": "punctuation.definition.string.end.aster"
+            }
+          },
+          "patterns": [
+            {
+              "include": "#string-escapes"
+            },
+            {
+              "match": "\\{\\{|\\}\\}",
+              "name": "constant.character.escape.aster"
+            },
+            {
+              "name": "meta.interpolation.aster",
+              "begin": "\\{",
+              "beginCaptures": {
+                "0": {
+                  "name": "punctuation.section.interpolation.begin.aster"
+                }
+              },
+              "end": "\\}",
+              "endCaptures": {
+                "0": {
+                  "name": "punctuation.section.interpolation.end.aster"
+                }
+              },
+              "patterns": [
+                {
+                  "match": "![rs]",
+                  "name": "constant.character.format.aster"
+                },
+                {
+                  "include": "source.aster"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "name": "string.quoted.f.aster",
+          "begin": "\\bf(')",
+          "beginCaptures": {
+            "0": {
+              "name": "storage.type.string.prefix.aster"
+            },
+            "1": {
+              "name": "punctuation.definition.string.begin.aster"
+            }
+          },
+          "end": "'|$",
+          "endCaptures": {
+            "0": {
+              "name": "punctuation.definition.string.end.aster"
+            }
+          },
+          "patterns": [
+            {
+              "include": "#string-escapes"
+            },
+            {
+              "match": "\\{\\{|\\}\\}",
+              "name": "constant.character.escape.aster"
+            },
+            {
+              "name": "meta.interpolation.aster",
+              "begin": "\\{",
+              "beginCaptures": {
+                "0": {
+                  "name": "punctuation.section.interpolation.begin.aster"
+                }
+              },
+              "end": "\\}",
+              "endCaptures": {
+                "0": {
+                  "name": "punctuation.section.interpolation.end.aster"
+                }
+              },
+              "patterns": [
+                {
+                  "match": "![rs]",
+                  "name": "constant.character.format.aster"
+                },
+                {
+                  "include": "source.aster"
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    "strings": {
+      "patterns": [
+        {
+          "name": "string.quoted.double.aster",
+          "begin": "\"",
+          "beginCaptures": {
+            "0": {
+              "name": "punctuation.definition.string.begin.aster"
+            }
+          },
+          "end": "\"|$",
+          "endCaptures": {
+            "0": {
+              "name": "punctuation.definition.string.end.aster"
+            }
+          },
+          "patterns": [
+            {
+              "include": "#string-escapes"
+            }
+          ]
+        },
+        {
+          "name": "string.quoted.single.aster",
+          "begin": "'",
+          "beginCaptures": {
+            "0": {
+              "name": "punctuation.definition.string.begin.aster"
+            }
+          },
+          "end": "'|$",
+          "endCaptures": {
+            "0": {
+              "name": "punctuation.definition.string.end.aster"
+            }
+          },
+          "patterns": [
+            {
+              "include": "#string-escapes"
+            }
+          ]
+        }
+      ]
+    },
+    "string-escapes": {
+      "patterns": [
+        {
+          "name": "constant.character.escape.aster",
+          "match": "\\\\(?:[ntrabfv\\\\'\"0-7]|x[0-9A-Fa-f]{2}|u[0-9A-Fa-f]{4}|U[0-9A-Fa-f]{8}|[0-7]{1,3})"
+        }
+      ]
+    },
+    "numbers": {
+      "patterns": [
+        {
+          "name": "constant.numeric.float.aster",
+          "match": "\\b\\d+\\.\\d+\\b"
+        },
+        {
+          "name": "constant.numeric.integer.aster",
+          "match": "\\b\\d+\\b"
+        }
+      ]
+    },
+    "imports": {
+      "patterns": [
+        {
+          "name": "meta.import.package.aster",
+          "match": "\\b(package)\\s+([\\p{L}_][\\p{L}\\p{N}\\p{M}_]*(?:\\s*\\.\\s*[\\p{L}_][\\p{L}\\p{N}\\p{M}_]*)*)\\s*(;)",
+          "captures": {
+            "1": {
+              "name": "keyword.other.package.aster"
+            },
+            "2": {
+              "name": "entity.name.namespace.package.aster"
+            },
+            "3": {
+              "name": "punctuation.terminator.statement.aster"
+            }
+          }
+        },
+        {
+          "name": "meta.import.aster",
+          "match": "\\b(import)\\s+([\\p{L}_][\\p{L}\\p{N}\\p{M}_]*(?:\\s*\\.\\s*[\\p{L}_][\\p{L}\\p{N}\\p{M}_]*)*)\\s*(\\.)\\s*(\\*)\\s*(;)",
+          "captures": {
+            "1": {
+              "name": "keyword.other.import.aster"
+            },
+            "2": {
+              "name": "entity.name.namespace.aster"
+            },
+            "3": {
+              "name": "punctuation.accessor.aster"
+            },
+            "4": {
+              "name": "constant.language.wildcard.aster"
+            },
+            "5": {
+              "name": "punctuation.terminator.statement.aster"
+            }
+          }
+        },
+        {
+          "name": "meta.import.aster",
+          "match": "\\b(import)\\s+([\\p{L}_][\\p{L}\\p{N}\\p{M}_]*(?:\\s*\\.\\s*[\\p{L}_][\\p{L}\\p{N}\\p{M}_]*)*)\\s+(as)\\s+([\\p{L}_][\\p{L}\\p{N}\\p{M}_]*)\\s*(;)",
+          "captures": {
+            "1": {
+              "name": "keyword.other.import.aster"
+            },
+            "2": {
+              "name": "entity.name.namespace.aster"
+            },
+            "3": {
+              "name": "keyword.other.as.aster"
+            },
+            "4": {
+              "name": "entity.name.namespace.alias.aster"
+            },
+            "5": {
+              "name": "punctuation.terminator.statement.aster"
+            }
+          }
+        },
+        {
+          "name": "meta.import.aster",
+          "match": "\\b(import)\\s+([\\p{L}_][\\p{L}\\p{N}\\p{M}_]*(?:\\s*\\.\\s*[\\p{L}_][\\p{L}\\p{N}\\p{M}_]*)*)\\s*(;)",
+          "captures": {
+            "1": {
+              "name": "keyword.other.import.aster"
+            },
+            "2": {
+              "name": "entity.name.namespace.aster"
+            },
+            "3": {
+              "name": "punctuation.terminator.statement.aster"
+            }
+          }
+        },
+        {
+          "name": "meta.import.from.aster",
+          "begin": "\\b(from)\\s+([\\p{L}_][\\p{L}\\p{N}\\p{M}_]*(?:\\s*\\.\\s*[\\p{L}_][\\p{L}\\p{N}\\p{M}_]*)*)\\s+(import)\\b",
+          "beginCaptures": {
+            "1": {
+              "name": "keyword.other.from.aster"
+            },
+            "2": {
+              "name": "entity.name.namespace.aster"
+            },
+            "3": {
+              "name": "keyword.other.import.aster"
+            }
+          },
+          "end": ";|$",
+          "endCaptures": {
+            "0": {
+              "name": "punctuation.terminator.statement.aster"
+            }
+          },
+          "patterns": [
+            {
+              "match": "(\\*)(?=\\s*(?:;|$))",
+              "captures": {
+                "1": {
+                  "name": "constant.language.wildcard.aster"
+                }
+              }
+            },
+            {
+              "match": "([\\p{L}_][\\p{L}\\p{N}\\p{M}_]*)\\s+(as)\\s+([\\p{L}_][\\p{L}\\p{N}\\p{M}_]*)",
+              "captures": {
+                "1": {
+                  "name": "variable.other.import.aster"
+                },
+                "2": {
+                  "name": "keyword.other.as.aster"
+                },
+                "3": {
+                  "name": "entity.name.namespace.alias.aster"
+                }
+              }
+            },
+            {
+              "match": "[\\p{L}_][\\p{L}\\p{N}\\p{M}_]*(?=\\s*(?:,|;|$))",
+              "name": "variable.other.import.aster"
+            },
+            {
+              "match": ",",
+              "name": "punctuation.separator.comma.aster"
+            }
+          ]
+        }
+      ]
+    },
+    "type-declarations": {
+      "patterns": [
+        {
+          "name": "meta.typedef.struct.aster",
+          "match": "\\b(typedef)\\s+(struct)\\s+([\\p{L}_][\\p{L}\\p{N}\\p{M}_]*)(?=[^{};]*\\{)",
+          "captures": {
+            "1": {
+              "name": "storage.type.typedef.aster"
+            },
+            "2": {
+              "name": "storage.type.struct.aster"
+            },
+            "3": {
+              "name": "entity.name.type.struct.aster"
+            }
+          }
+        },
+        {
+          "name": "meta.class.aster",
+          "match": "\\b(class)\\s+([\\p{L}_][\\p{L}\\p{N}\\p{M}_]*)(?=[^{};]*\\{)",
+          "captures": {
+            "1": {
+              "name": "storage.type.class.aster"
+            },
+            "2": {
+              "name": "entity.name.class.aster"
+            }
+          }
+        },
+        {
+          "name": "meta.interface.aster",
+          "match": "\\b(interface)\\s+([\\p{L}_][\\p{L}\\p{N}\\p{M}_]*)(?=[^{};]*\\{)",
+          "captures": {
+            "1": {
+              "name": "storage.type.interface.aster"
+            },
+            "2": {
+              "name": "entity.name.interface.aster"
+            }
+          }
+        },
+        {
+          "name": "meta.struct.aster",
+          "match": "\\b(struct)\\s+([\\p{L}_][\\p{L}\\p{N}\\p{M}_]*)(?=[^{};]*\\{)",
+          "captures": {
+            "1": {
+              "name": "storage.type.struct.aster"
+            },
+            "2": {
+              "name": "entity.name.type.struct.aster"
+            }
+          }
+        },
+        {
+          "name": "meta.enum.body.aster",
+          "begin": "\\b(enum)\\s+([\\p{L}_][\\p{L}\\p{N}\\p{M}_]*)\\s*(\\{)",
+          "beginCaptures": {
+            "1": {
+              "name": "storage.type.enum.aster"
+            },
+            "2": {
+              "name": "entity.name.enum.aster"
+            },
+            "3": {
+              "name": "punctuation.section.enum.begin.aster"
+            }
+          },
+          "end": "\\}",
+          "endCaptures": {
+            "0": {
+              "name": "punctuation.section.enum.end.aster"
+            }
+          },
+          "patterns": [
+            {
+              "include": "#comments"
+            },
+            {
+              "include": "#strings"
+            },
+            {
+              "name": "meta.enum.member.aster",
+              "match": "(?<=[{,])\\s*([\\p{L}_][\\p{L}\\p{N}\\p{M}_]*)(?=\\s*[(,;=}])",
+              "captures": {
+                "1": {
+                  "name": "constant.other.enummember.aster"
+                }
+              }
+            },
+            {
+              "include": "#parameter-list"
+            },
+            {
+              "include": "#numbers"
+            },
+            {
+              "include": "#types"
+            },
+            {
+              "include": "#operators"
+            },
+            {
+              "include": "#punctuation"
+            }
+          ]
+        },
+        {
+          "name": "meta.exception.aster",
+          "begin": "\\b(exception)\\s+([\\p{L}_][\\p{L}\\p{N}\\p{M}_]*)",
+          "beginCaptures": {
+            "1": {
+              "name": "storage.type.exception.aster"
+            },
+            "2": {
+              "name": "entity.name.class.aster"
+            }
+          },
+          "end": ";",
+          "endCaptures": {
+            "0": {
+              "name": "punctuation.terminator.statement.aster"
+            }
+          },
+          "patterns": [
+            {
+              "include": "#comments"
+            },
+            {
+              "include": "#strings"
+            },
+            {
+              "name": "keyword.other.extends.aster",
+              "match": "\\b(extends|implements)\\b"
+            },
+            {
+              "include": "#types"
+            }
+          ]
+        }
+      ]
+    },
+    "function-declarations": {
+      "patterns": [
+        {
+          "name": "meta.function.signature.aster",
+          "begin": "\\b(fn)\\s+([\\p{L}_][\\p{L}\\p{N}\\p{M}_]*)",
+          "beginCaptures": {
+            "1": {
+              "name": "storage.type.function.aster"
+            },
+            "2": {
+              "name": "entity.name.function.aster"
+            }
+          },
+          "end": "(\\{)|(;)",
+          "endCaptures": {
+            "1": {
+              "name": "punctuation.section.function.begin.aster"
+            },
+            "2": {
+              "name": "punctuation.terminator.statement.aster"
+            }
+          },
+          "patterns": [
+            {
+              "include": "#comments"
+            },
+            {
+              "include": "#strings"
+            },
+            {
+              "include": "#type-parameters"
+            },
+            {
+              "include": "#parameter-list"
+            },
+            {
+              "include": "#keywords"
+            },
+            {
+              "include": "#constants"
+            },
+            {
+              "include": "#types"
+            },
+            {
+              "include": "#operators"
+            },
+            {
+              "include": "#punctuation"
+            }
+          ]
+        }
+      ]
+    },
+    "parameter-list": {
+      "patterns": [
+        {
+          "name": "meta.parameters.aster",
+          "begin": "\\(",
+          "beginCaptures": {
+            "0": {
+              "name": "punctuation.section.parameters.begin.aster"
+            }
+          },
+          "end": "\\)",
+          "endCaptures": {
+            "0": {
+              "name": "punctuation.section.parameters.end.aster"
+            }
+          },
+          "patterns": [
+            {
+              "name": "meta.parameter.default.aster",
+              "begin": "=(?!=)",
+              "end": "(?=[,)])",
+              "patterns": [
+                {
+                  "include": "#comments"
+                },
+                {
+                  "include": "#strings"
+                },
+                {
+                  "include": "#constants"
+                },
+                {
+                  "include": "#types"
+                },
+                {
+                  "include": "#function-calls"
+                },
+                {
+                  "include": "#member-access"
+                },
+                {
+                  "include": "#operators"
+                },
+                {
+                  "include": "#punctuation"
+                }
+              ]
+            },
+            {
+              "match": "(?<![\\p{L}\\p{N}\\p{M}_])([\\p{L}_][\\p{L}\\p{N}\\p{M}_]*)(?=\\s*(?:,|\\)))",
+              "name": "variable.parameter.aster"
+            },
+            {
+              "include": "#comments"
+            },
+            {
+              "include": "#strings"
+            },
+            {
+              "include": "#parameter-list"
+            },
+            {
+              "include": "#constants"
+            },
+            {
+              "include": "#types"
+            },
+            {
+              "include": "#operators"
+            },
+            {
+              "include": "#punctuation"
+            }
+          ]
+        }
+      ]
+    },
+    "type-parameters": {
+      "patterns": [
+        {
+          "name": "meta.type-parameters.aster",
+          "begin": "<(?=\\s*[\\p{L}_])",
+          "beginCaptures": {
+            "0": {
+              "name": "punctuation.definition.typeparameters.begin.aster"
+            }
+          },
+          "end": ">",
+          "endCaptures": {
+            "0": {
+              "name": "punctuation.definition.typeparameters.end.aster"
+            }
+          },
+          "patterns": [
+            {
+              "match": "\\b(extends)\\b",
+              "name": "keyword.other.extends.aster"
+            },
+            {
+              "match": "[\\p{L}_][\\p{L}\\p{N}\\p{M}_]*",
+              "name": "entity.name.type.parameter.aster"
+            },
+            {
+              "include": "#types"
+            },
+            {
+              "match": ",",
+              "name": "punctuation.separator.comma.aster"
+            }
+          ]
+        }
+      ]
+    },
+    "accessor-declarations": {
+      "patterns": [
+        {
+          "name": "meta.accessor.aster",
+          "begin": "\\b(getter|setter)\\s+([\\p{L}_][\\p{L}\\p{N}\\p{M}_]*)",
+          "beginCaptures": {
+            "1": {
+              "name": "keyword.other.accessor.aster"
+            },
+            "2": {
+              "name": "entity.name.function.aster"
+            }
+          },
+          "end": "(\\{)|(;)",
+          "endCaptures": {
+            "1": {
+              "name": "punctuation.section.function.begin.aster"
+            },
+            "2": {
+              "name": "punctuation.terminator.statement.aster"
+            }
+          },
+          "patterns": [
+            {
+              "include": "#comments"
+            },
+            {
+              "include": "#strings"
+            },
+            {
+              "include": "#parameter-list"
+            },
+            {
+              "include": "#types"
+            },
+            {
+              "include": "#operators"
+            },
+            {
+              "include": "#punctuation"
+            }
+          ]
+        },
+        {
+          "name": "meta.constructor.aster",
+          "begin": "\\b(constructor)\\b",
+          "beginCaptures": {
+            "1": {
+              "name": "storage.type.constructor.aster"
+            }
+          },
+          "end": "(\\{)|(;)",
+          "endCaptures": {
+            "1": {
+              "name": "punctuation.section.function.begin.aster"
+            },
+            "2": {
+              "name": "punctuation.terminator.statement.aster"
+            }
+          },
+          "patterns": [
+            {
+              "include": "#comments"
+            },
+            {
+              "include": "#strings"
+            },
+            {
+              "include": "#parameter-list"
+            },
+            {
+              "include": "#keywords"
+            },
+            {
+              "include": "#constants"
+            },
+            {
+              "include": "#types"
+            },
+            {
+              "include": "#operators"
+            },
+            {
+              "include": "#punctuation"
+            }
+          ]
+        }
+      ]
+    },
+    "property-declarations": {
+      "patterns": [
+        {
+          "name": "meta.property.declaration.aster",
+          "begin": "(@)\\s*(property)\\b",
+          "beginCaptures": {
+            "1": {
+              "name": "punctuation.decorator.aster"
+            },
+            "2": {
+              "name": "keyword.other.property.aster"
+            }
+          },
+          "end": ";",
+          "endCaptures": {
+            "0": {
+              "name": "punctuation.terminator.statement.aster"
+            }
+          },
+          "patterns": [
+            {
+              "include": "#comments"
+            },
+            {
+              "match": "([\\p{L}_][\\p{L}\\p{N}\\p{M}_]*)(?=\\s*;)",
+              "name": "variable.other.property.aster"
+            },
+            {
+              "include": "#types"
+            },
+            {
+              "include": "#constants"
+            },
+            {
+              "include": "#operators"
+            },
+            {
+              "include": "#punctuation"
+            }
+          ]
+        }
+      ]
+    },
+    "variable-language": {
+      "patterns": [
+        {
+          "name": "variable.language.aster",
+          "match": "\\b(self|super)\\b"
+        }
+      ]
+    },
+    "constants": {
+      "patterns": [
+        {
+          "name": "constant.language.aster",
+          "match": "\\b(true|false|null)\\b"
+        },
+        {
+          "name": "constant.other.caps.aster",
+          "match": "\\b[A-Z][A-Z0-9_]*[A-Z0-9]\\b"
+        }
+      ]
+    },
+    "keywords": {
+      "patterns": [
+        {
+          "name": "keyword.control.aster",
+          "match": "\\b(if|else|while|for|break|continue|return|yield|throw|try|catch|finally|switch|case|default|when|assert)\\b"
+        },
+        {
+          "name": "storage.type.aster",
+          "match": "\\b(fn|class|interface|struct|typedef|enum|exception|constructor|getter|setter|property|var)\\b"
+        },
+        {
+          "name": "storage.modifier.aster",
+          "match": "\\b(public|protected|private|internal|static|const|export|extern|vararg|varkwarg|overload)\\b"
+        },
+        {
+          "name": "keyword.operator.word.aster",
+          "match": "\\b(and|or|not|is|in)\\b"
+        },
+        {
+          "name": "keyword.other.aster",
+          "match": "\\b(package|import|from|as|new|sizeof|extends|implements)\\b"
+        }
+      ]
+    },
+    "new-expression": {
+      "patterns": [
+        {
+          "name": "meta.new.aster",
+          "match": "\\b(new)\\s+([\\p{L}_][\\p{L}\\p{N}\\p{M}_]*)",
+          "captures": {
+            "1": {
+              "name": "keyword.other.new.aster"
+            },
+            "2": {
+              "name": "entity.name.type.aster"
+            }
+          }
+        }
+      ]
+    },
+    "member-access": {
+      "patterns": [
+        {
+          "name": "meta.method.access.aster",
+          "match": "(\\.|->|\\?\\.)([\\p{L}_][\\p{L}\\p{N}\\p{M}_]*)(?=\\s*\\()",
+          "captures": {
+            "1": {
+              "name": "punctuation.accessor.aster"
+            },
+            "2": {
+              "name": "entity.name.function.aster"
+            }
+          }
+        },
+        {
+          "name": "meta.enum-member.access.aster",
+          "match": "(\\.|->|\\?\\.)([A-Z][\\p{L}\\p{N}\\p{M}_]*)",
+          "captures": {
+            "1": {
+              "name": "punctuation.accessor.aster"
+            },
+            "2": {
+              "name": "constant.other.enummember.aster"
+            }
+          }
+        },
+        {
+          "name": "meta.property.access.aster",
+          "match": "(\\.|->|\\?\\.)([\\p{L}_][\\p{L}\\p{N}\\p{M}_]*)",
+          "captures": {
+            "1": {
+              "name": "punctuation.accessor.aster"
+            },
+            "2": {
+              "name": "variable.other.property.aster"
+            }
+          }
+        }
+      ]
+    },
+    "types": {
+      "patterns": [
+        {
+          "name": "support.type.primitive.aster",
+          "match": "\\b(int|float|bool|str|void|any)\\b"
+        },
+        {
+          "name": "storage.type.struct.aster",
+          "match": "\\bstruct\\b"
+        },
+        {
+          "name": "entity.name.type.aster",
+          "match": "\\b[A-Z][\\p{L}\\p{N}\\p{M}_]*\\b"
+        },
+        {
+          "name": "entity.name.type.parameter.aster",
+          "match": "\\b[A-Z]\\b"
+        }
+      ]
+    },
+    "function-calls": {
+      "patterns": [
+        {
+          "name": "entity.name.function.call.aster",
+          "match": "(?<![\\p{L}\\p{N}\\p{M}_])([\\p{L}_][\\p{L}\\p{N}\\p{M}_]*)(?=\\s*\\()"
+        }
+      ]
+    },
+    "operators": {
+      "patterns": [
+        {
+          "name": "keyword.operator.assignment.aster",
+          "match": "\\*\\*=|//=|!=|%=|\\*=|\\+=|-=|/=|=="
+        },
+        {
+          "name": "keyword.operator.aster",
+          "match": "\\*\\*|\\+\\+|--|->|=>|\\.\\.|//|<=|>=|\\?\\.|\\?\\?|\\|>"
+        },
+        {
+          "name": "keyword.operator.aster",
+          "match": "[%&*+\\-/<>=|?!]"
+        }
+      ]
+    },
+    "punctuation": {
+      "patterns": [
+        {
+          "name": "punctuation.section.block.aster",
+          "match": "[{}]"
+        },
+        {
+          "name": "punctuation.section.brackets.aster",
+          "match": "[\\[\\]]"
+        },
+        {
+          "name": "punctuation.section.parens.aster",
+          "match": "[()]"
+        },
+        {
+          "name": "punctuation.separator.aster",
+          "match": "[,;:]"
+        },
+        {
+          "name": "punctuation.accessor.dot.aster",
+          "match": "\\."
+        },
+        {
+          "name": "punctuation.decorator.aster",
+          "match": "@"
+        }
+      ]
+    }
+  }
+}

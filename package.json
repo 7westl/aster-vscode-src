@@ -1,0 +1,166 @@
+{
+  "name": "aster-language",
+  "displayName": "Aster Language Support",
+  "description": "Aster language support with scope-aware semantic highlighting.",
+  "version": "0.2.0",
+  "publisher": "aster",
+  "engines": {
+    "vscode": "^1.85.0"
+  },
+  "categories": [
+    "Programming Languages"
+  ],
+  "activationEvents": [
+    "onLanguage:aster"
+  ],
+  "main": "./src/extension.js",
+  "contributes": {
+    "languages": [
+      {
+        "id": "aster",
+        "aliases": [
+          "Aster",
+          "aster"
+        ],
+        "extensions": [
+          ".ast"
+        ],
+        "configuration": "./language-configuration.json"
+      }
+    ],
+    "grammars": [
+      {
+        "language": "aster",
+        "scopeName": "source.aster",
+        "path": "./syntaxes/aster.tmLanguage.json"
+      }
+    ],
+    "semanticTokenTypes": [
+      {
+        "id": "namespace",
+        "description": "Aster namespace symbol"
+      },
+      {
+        "id": "type",
+        "description": "Aster type symbol"
+      },
+      {
+        "id": "class",
+        "description": "Aster class symbol"
+      },
+      {
+        "id": "interface",
+        "description": "Aster interface symbol"
+      },
+      {
+        "id": "struct",
+        "description": "Aster struct symbol"
+      },
+      {
+        "id": "enum",
+        "description": "Aster enum symbol"
+      },
+      {
+        "id": "typeParameter",
+        "description": "Aster typeParameter symbol"
+      },
+      {
+        "id": "parameter",
+        "description": "Aster parameter symbol"
+      },
+      {
+        "id": "variable",
+        "description": "Aster variable symbol"
+      },
+      {
+        "id": "property",
+        "description": "Aster property symbol"
+      },
+      {
+        "id": "enumMember",
+        "description": "Aster enumMember symbol"
+      },
+      {
+        "id": "function",
+        "description": "Aster function symbol"
+      },
+      {
+        "id": "method",
+        "description": "Aster method symbol"
+      }
+    ],
+    "semanticTokenScopes": [
+      {
+        "language": "aster",
+        "scopes": {
+          "namespace": [
+            "entity.name.namespace.aster"
+          ],
+          "type": [
+            "entity.name.type.aster",
+            "support.type.primitive.aster"
+          ],
+          "class": [
+            "entity.name.class.aster"
+          ],
+          "interface": [
+            "entity.name.interface.aster"
+          ],
+          "struct": [
+            "entity.name.type.struct.aster"
+          ],
+          "enum": [
+            "entity.name.enum.aster"
+          ],
+          "typeParameter": [
+            "entity.name.type.parameter.aster"
+          ],
+          "parameter": [
+            "variable.parameter.aster"
+          ],
+          "variable": [
+            "variable.other.aster"
+          ],
+          "property": [
+            "variable.other.property.aster"
+          ],
+          "enumMember": [
+            "constant.other.enummember.aster"
+          ],
+          "function": [
+            "entity.name.function.aster"
+          ],
+          "method": [
+            "entity.name.function.call.aster"
+          ],
+          "keyword": [
+            "keyword.control.aster",
+            "storage.type.aster",
+            "storage.modifier.aster"
+          ],
+          "operator": [
+            "keyword.operator.aster"
+          ],
+          "comment": [
+            "comment.block.aster",
+            "comment.line.number-sign.aster"
+          ]
+        }
+      }
+    ],
+    "themes": [
+      {
+        "label": "Aster Material",
+        "uiTheme": "vs-dark",
+        "path": "./themes/aster-color-theme.json"
+      }
+    ]
+  },
+  "scripts": {
+    "vscode:prepublish": "node --check src/extension.js && node --check src/semantic.js && node --check src/definitions.js",
+    "check": "node --check src/extension.js && node --check src/semantic.js && node --check src/definitions.js"
+  },
+  "devDependencies": {
+    "@types/vscode": "^1.85.0"
+  }
+}
