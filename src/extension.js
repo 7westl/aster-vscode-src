@@ -1,6 +1,7 @@
 const vscode = require("vscode");
 const { TOKEN_TYPES, TOKEN_MODIFIERS, analyzeDocument } = require("./semantic");
 const { registerDefinitionSupport } = require("./definitions");
+const { registerRunSupport } = require("./run");
 
 const TOKEN_TYPE_INDEX = new Map(TOKEN_TYPES.map((type, index) => [type, index]));
 
@@ -38,6 +39,7 @@ function activate(context) {
   );
 
   registerDefinitionSupport(context);
+  registerRunSupport(context);
 }
 
 function deactivate() {}

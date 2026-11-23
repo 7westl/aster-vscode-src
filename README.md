@@ -30,6 +30,24 @@ The resolver caches analyses per open document version and per file modification
 
 **Known limits:** inheritance chains are not followed (a method inherited from a base class is not found unless called on that base type), and chained calls such as `a.b().c` only resolve their first member.
 
+## Running `.ast` files
+
+An `.ast` file can be run straight from the editor:
+
+- Click the play button in the editor title bar, or run **Aster: Run Aster File** from the Command Palette.
+- Press `Ctrl+F5`, or right-click the editor, a tab, or a file in the Explorer and choose **Run Aster File**.
+
+The command saves the file and then executes `aster <file>` in an integrated terminal named **Aster**, so program output and standard input work as usual.
+
+The compiler is located in this order:
+
+1. The `aster.executablePath` setting (supports `~`, `${userHome}`, and `${workspaceFolder}`).
+2. The `ASTER_HOME` environment variable (`ASTER_HOME/aster(.exe)` or `ASTER_HOME/bin/aster(.exe)`).
+3. `aster` / `aster.exe` on `PATH`.
+4. A shallow search of the workspace, including a sibling `Aster-Alpha-Version` folder.
+
+When the binary sits next to a `Lib` directory, the extension sets `ASTER_HOME` for the terminal so the standard library resolves. If no compiler is found, the error message links to the `aster.executablePath` setting.
+
 ## Validation
 
 The repository is checked with:
@@ -40,7 +58,7 @@ npm run check
 
 The grammar was tokenized against all 357 `.ast` files in `Aster-Alpha-Version` with `vscode-textmate` + `vscode-oniguruma` (0 tokenizer failures), and the semantic analyzer processed the same corpus (30,400 tokens, 0 errors) with all tokens within document bounds. Definition resolution was checked on multi-file fixtures and against the real library (`BufferedReader extends Reader`, `sb.append` into `String.ast`, `self->src`, aliased `from ... import DayOfWeek as Dow`), including an Extension Host run of `editor.action.revealDefinition`.
 
-## Run
+## Extension development
 
 1. Open this folder in VS Code.
 2. Press `F5` to launch an Extension Development Host.

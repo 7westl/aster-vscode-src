@@ -2,7 +2,7 @@
   "name": "aster-language",
   "displayName": "Aster Language Support",
   "description": "Aster language support with scope-aware semantic highlighting.",
-  "version": "0.2.0",
+  "version": "0.3.0",
   "publisher": "aster",
   "engines": {
     "vscode": "^1.85.0"
@@ -11,10 +11,72 @@
     "Programming Languages"
   ],
   "activationEvents": [
-    "onLanguage:aster"
+    "onLanguage:aster",
+    "onCommand:aster.runFile"
   ],
   "main": "./src/extension.js",
   "contributes": {
+    "commands": [
+      {
+        "command": "aster.runFile",
+        "title": "Run Aster File",
+        "category": "Aster",
+        "icon": "$(play)"
+      }
+    ],
+    "menus": {
+      "editor/title/run": [
+        {
+          "command": "aster.runFile",
+          "when": "editorLangId == aster && !isInDiffEditor",
+          "group": "navigation@1"
+        }
+      ],
+      "editor/title/context": [
+        {
+          "command": "aster.runFile",
+          "when": "resourceLangId == aster",
+          "group": "aster@1"
+        }
+      ],
+      "editor/context": [
+        {
+          "command": "aster.runFile",
+          "when": "editorLangId == aster",
+          "group": "aster@1"
+        }
+      ],
+      "explorer/context": [
+        {
+          "command": "aster.runFile",
+          "when": "resourceExtname == .ast",
+          "group": "aster@1"
+        }
+      ],
+      "commandPalette": [
+        {
+          "command": "aster.runFile",
+          "when": "editorLangId == aster"
+        }
+      ]
+    },
+    "keybindings": [
+      {
+        "command": "aster.runFile",
+        "key": "ctrl+f5",
+        "when": "editorTextFocus && editorLangId == aster"
+      }
+    ],
+    "configuration": {
+      "title": "Aster",
+      "properties": {
+        "aster.executablePath": {
+          "type": "string",
+          "default": "",
+          "markdownDescription": "Absolute path to the Aster executable (`aster` or `aster.exe`). Leave empty to use `ASTER_HOME`, `PATH`, or a binary found in the workspace."
+        }
+      }
+    },
     "languages": [
       {
         "id": "aster",
@@ -157,8 +219,8 @@
     ]
   },
   "scripts": {
-    "vscode:prepublish": "node --check src/extension.js && node --check src/semantic.js && node --check src/definitions.js",
-    "check": "node --check src/extension.js && node --check src/semantic.js && node --check src/definitions.js"
+    "vscode:prepublish": "node --check src/extension.js && node --check src/semantic.js && node --check src/definitions.js && node --check src/run.js",
+    "check": "node --check src/extension.js && node --check src/semantic.js && node --check src/definitions.js && node --check src/run.js"
   },
   "devDependencies": {
     "@types/vscode": "^1.85.0"
