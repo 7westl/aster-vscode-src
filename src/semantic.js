@@ -30,6 +30,7 @@ const HARD_KEYWORDS = new Set([
   "interface", "new", "self", "public", "protected", "private", "internal",
   "if", "else", "while", "for", "break", "continue", "return", "yield",
   "throw", "try", "catch", "finally", "switch", "case", "default", "typedef",
+  "type",
   "struct", "and", "or", "not", "is", "in", "true", "false", "sizeof", "int",
   "float", "bool", "str", "null", "void", "super", "exception", "export",
 ]);
@@ -537,6 +538,28 @@ function collectDeclarations(ctx) {
       continue;
     }
 
+    if (s === "typedef" && isName(ctx, i + 1)) {
+      const underlying = parseType(ctx, i + 2, 0);
+      if (underlying && textAt(ctx, underlying.end) === ";") {
+        const name = ctx.sig[i + 1].text;
+        ctx.types.set(name, "type");
+        ctx.typeDeclarations.set(name, i + 1);
+        continue;
+      }
+    }
+
+    if (
+      s === "type" &&
+      textAt(ctx, i - 1) === "export" &&
+      isName(ctx, i + 1) &&
+      textAt(ctx, i + 2) === ";"
+    ) {
+      const name = ctx.sig[i + 1].text;
+      ctx.types.set(name, "type");
+      ctx.typeDeclarations.set(name, i + 1);
+      continue;
+    }
+
     if (s === "class" || s === "interface" || s === "struct" || s === "enum") {
       if (!isName(ctx, i + 1)) continue;
       const name = ctx.sig[i + 1].text;
@@ -960,6 +983,35 @@ function handleTypedefStruct(ctx, i) {
     typedefAliasIndex: aliasIndex,
   };
   return body;
+}
+
+function handleTypeAlias(ctx, i) {
+  const nameIndex = i + 1;
+  const underlying = parseType(ctx, i + 2, 0);
+  if (!isName(ctx, nameIndex) || !underlying || textAt(ctx, underlying.end) !== ";") {
+    return i + 1;
+  }
+
+  emit(ctx, nameIndex, "type", DECL);
+  ctx.types.set(ctx.sig[nameIndex].text, "type");
+  emitRefs(ctx, underlying.refs);
+  return underlying.end + 1;
+}
+
+function handleForwardType(ctx, i) {
+  const nameIndex = i + 1;
+  if (
+    textAt(ctx, i - 1) !== "export" ||
+    !isName(ctx, nameIndex) ||
+    textAt(ctx, i + 2) !== ";"
+  ) {
+    return i + 1;
+  }
+
+  const name = ctx.sig[nameIndex].text;
+  emit(ctx, nameIndex, "type", DECL);
+  ctx.types.set(name, "type");
+  return i + 3;
 }
 
 function handleException(ctx, i) {
@@ -1607,6 +1659,20 @@ function run(ctx, start = 0, end = ctx.sig.length, pushFile = true) {
     if (s === "typedef" && textAt(ctx, i + 1) === "struct") {
       i = handleTypedefStruct(ctx, i);
       continue;
+    }
+    if (s === "typedef") {
+      const next = handleTypeAlias(ctx, i);
+      if (next > i + 1) {
+        i = next;
+        continue;
+      }
+    }
+    if (s === "type") {
+      const next = handleForwardType(ctx, i);
+      if (next > i + 1) {
+        i = next;
+        continue;
+      }
     }
     if ((s === "class" || s === "interface" || s === "struct" || s === "enum") && isName(ctx, i + 1)) {
       const body = findBodyBrace(ctx, i + 2);

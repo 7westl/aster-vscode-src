@@ -389,6 +389,54 @@
           }
         },
         {
+          "name": "meta.typedef.alias.aster",
+          "match": "\\b(typedef)\\s+([\\p{L}_][\\p{L}\\p{N}\\p{M}_]*)\\s+([\\p{L}_][\\p{L}\\p{N}\\p{M}_]*)\\s*(;)",
+          "captures": {
+            "1": {
+              "name": "storage.type.typedef.aster"
+            },
+            "2": {
+              "name": "entity.name.type.aster"
+            },
+            "3": {
+              "name": "entity.name.type.aster"
+            },
+            "4": {
+              "name": "punctuation.terminator.statement.aster"
+            }
+          }
+        },
+        {
+          "name": "meta.typedef.alias.aster",
+          "match": "\\b(typedef)\\s+([\\p{L}_][\\p{L}\\p{N}\\p{M}_]*)(?=\\s+[^;\\r\\n]+\\s*;)",
+          "captures": {
+            "1": {
+              "name": "storage.type.typedef.aster"
+            },
+            "2": {
+              "name": "entity.name.type.aster"
+            }
+          }
+        },
+        {
+          "name": "meta.type.forward-declaration.aster",
+          "match": "\\b(export)\\s+(type)\\s+([\\p{L}_][\\p{L}\\p{N}\\p{M}_]*)\\s*(;)",
+          "captures": {
+            "1": {
+              "name": "storage.modifier.aster"
+            },
+            "2": {
+              "name": "storage.type.aster"
+            },
+            "3": {
+              "name": "entity.name.type.aster"
+            },
+            "4": {
+              "name": "punctuation.terminator.statement.aster"
+            }
+          }
+        },
+        {
           "name": "meta.class.aster",
           "match": "\\b(class)\\s+([\\p{L}_][\\p{L}\\p{N}\\p{M}_]*)(?=[^{};]*\\{)",
           "captures": {
@@ -839,7 +887,7 @@
         },
         {
           "name": "storage.type.aster",
-          "match": "\\b(fn|class|interface|struct|typedef|enum|exception|constructor|getter|setter|property|var)\\b"
+          "match": "\\b(fn|class|interface|struct|typedef|type|enum|exception|constructor|getter|setter|property|var)\\b"
         },
         {
           "name": "storage.modifier.aster",
